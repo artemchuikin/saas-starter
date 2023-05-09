@@ -1,0 +1,34 @@
+/* Main Colors */
+$color-base: #fbfcf8;
+$color-graybase: #000;
+$color-fill: #111111;
+
+/* Fonts */
+$font-family: 'Inter', sans-serif;
+$font-size: 16px;
+$font-weight: normal;
+$letter-spacing: normal;
+$line-height: normal;
+
+/* Screen sizes */
+$screen-xs: 375px;
+$screen-sm: 768px;
+$screen-md: 1024px;
+$screen-lg: 1200px;
+$screen-ml: 1400px;
+$screen-xl: 1600px;
+$screen-ul: 1920px;
+
+$screen-xs-min: $screen-xs;
+$screen-xs-max: ($screen-sm - 1);
+$screen-sm-min: $screen-sm;
+$screen-sm-max: ($screen-md - 1);
+$screen-md-min: $screen-md;
+$screen-md-max: ($screen-lg - 1);
+$screen-lg-min: $screen-lg;
+$screen-lg-max: ($screen-ml - 1);
+$screen-ml-min: $screen-ml;
+$screen-ml-max: ($screen-xl - 1);
+$screen-xl-min: $screen-xl;
+$screen-xl-max: ($screen-ul - 1);
+$screen-ul-min: $screen-ul;

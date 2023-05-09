@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import 'base/normalize';
+@import 'base/variables';
+@import 'base/root';
+
+// Libraries
+@import 'toastify';

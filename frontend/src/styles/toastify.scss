@@ -1,0 +1,13 @@
+:root {
+    --toastify-color-light: #fff;
+    --toastify-color-dark: #111111;
+    --toastify-color-info: #3498db;
+    --toastify-color-success: #aef359;
+    --toastify-color-warning: #f1c40f;
+    --toastify-color-error: #f95954;
+}
+
+.Toastify__toast-icon svg {
+    width: 100%;
+    height: 100%;
+}
