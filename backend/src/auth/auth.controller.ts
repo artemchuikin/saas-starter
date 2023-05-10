@@ -102,4 +102,9 @@ export class AuthController {
 
         return generatedTokens;
     }
+
+    @Get('hello')
+    async getHello() {
+        return 'Hello world'
+    }
 }
