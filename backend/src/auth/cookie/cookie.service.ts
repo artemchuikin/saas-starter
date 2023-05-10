@@ -15,7 +15,7 @@ export class CookieService {
             httpOnly: true,
             // sameSite: 'strict',
             maxAge: this.configService.get('jwt.refreshTokenTtl'),
-            path: '/api/v1/auth',
+            // path: '/api/v1/auth',
             // domain: `.${this.configService.get('domain')}`
         });
     }
