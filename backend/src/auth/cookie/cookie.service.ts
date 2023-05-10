@@ -11,12 +11,12 @@ export class CookieService {
 
     setRefreshToken(res: Response, value: string) {
         res.cookie('refreshToken', value, {
-            secure: true,
+            // secure: true,
             httpOnly: true,
-            sameSite: 'strict',
+            // sameSite: 'strict',
             maxAge: this.configService.get('jwt.refreshTokenTtl'),
             path: '/api/v1/auth',
-            domain: `.${this.configService.get('domain')}`
+            // domain: `.${this.configService.get('domain')}`
         });
     }
 }
