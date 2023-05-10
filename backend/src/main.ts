@@ -13,6 +13,7 @@ async function bootstrap() {
     app.setGlobalPrefix('api/v1');
     app.enableCors({
         origin: [
+            'http://localhost:3002',
             configService.get<string>('clientUrl')
         ],
         credentials: true
