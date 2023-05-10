@@ -1,12 +1,13 @@
-import { ModuleMetadata, Type } from "@nestjs/common";
-import { Twilio } from "twilio";
+import {ModuleMetadata, Type} from '@nestjs/common';
+import {Twilio} from 'twilio';
 
-export interface TwilioClient extends Twilio {}
+export interface TwilioClient extends Twilio {
+}
 
 export interface TwilioOptions {
     accountSid: string;
     authToken: string;
-    options?: Twilio.TwilioClientOptions
+    options?: Twilio.TwilioClientOptions;
 }
 
 export interface TwilioOptionsFactory {

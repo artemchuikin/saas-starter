@@ -1,19 +1,20 @@
 import {
     Controller,
     Post,
-    Body,
-} from "@nestjs/common";
-import { TwilioService } from "./twilio.service";
+    Body
+} from '@nestjs/common';
+import {TwilioService} from './twilio.service';
 
-@Controller("twilio")
+@Controller('twilio')
 export class TwilioController {
     constructor(
         private twilioService: TwilioService
-    ) {}
+    ) {
+    }
 
-    @Post("sms")
+    @Post('sms')
     sendNotification(
-        @Body("message") message: string,
+        @Body('message') message: string
     ): Promise<void> {
         return this.twilioService.sendSMS(message);
     }

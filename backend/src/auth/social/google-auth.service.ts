@@ -1,10 +1,10 @@
-import { Knex } from "knex";
+import {Knex} from 'knex';
 import * as uniqid from 'uniqid';
-import { ConflictException, Injectable, InternalServerErrorException } from "@nestjs/common";
-import { OAuth2Client } from "google-auth-library";
-import { ConfigService } from "@nestjs/config";
-import { AuthService } from "../auth.service";
-import { InjectConnection } from "nest-knexjs";
+import {ConflictException, Injectable, InternalServerErrorException} from '@nestjs/common';
+import {OAuth2Client} from 'google-auth-library';
+import {ConfigService} from '@nestjs/config';
+import {AuthService} from '../auth.service';
+import {InjectConnection} from 'nest-knexjs';
 
 @Injectable()
 export class GoogleAuthService {
@@ -14,7 +14,8 @@ export class GoogleAuthService {
         @InjectConnection() private readonly knex: Knex,
         private readonly configService: ConfigService,
         private readonly authService: AuthService
-    ) {}
+    ) {
+    }
 
     onModuleInit() {
         const clientId = this.configService.get('googleAuth.clientId');
@@ -27,7 +28,7 @@ export class GoogleAuthService {
             const {email, sub: googleId} = await this.oAuth2Client.getTokenInfo(token);
             const user = await this.knex('users').where('googleId', googleId);
 
-            if(user[0]) {
+            if (user[0]) {
                 return this.authService.generateTokens(user[0]);
             } else {
                 const uid = uniqid();
@@ -41,8 +42,8 @@ export class GoogleAuthService {
 
                 return await this.authService.generateTokens(newUser[0]);
             }
-        } catch(error) {
-            if(error.code === '23505') {
+        } catch (error) {
+            if (error.code === '23505') {
                 /**
                  * @throws
                  * Will throw an error if the document (user) does not exist.

@@ -1,7 +1,8 @@
-import { ModuleMetadata, Type } from "@nestjs/common";
-import { Telegraf } from 'telegraf';
+import {ModuleMetadata, Type} from '@nestjs/common';
+import {Telegraf} from 'telegraf';
 
-export interface TelegramBot extends Telegraf{}
+export interface TelegramBot extends Telegraf {
+}
 
 export interface TelegramOptions {
     chatId: string;

@@ -1,17 +1,17 @@
-import { Knex } from "knex";
+import {Knex} from 'knex';
 
 export const up = async (knex: Knex) => {
     await knex.schema.createTable('users', (table: Knex.TableBuilder) => {
         table.string('id')
             .unique()
-            .primary()
-        table.string("email", 255)
+            .primary();
+        table.string('email', 255)
             .unique()
-            .notNullable()
-        table.string("password", 255)
-            .nullable()
-        table.string("googleId", 255)
-            .nullable()
+            .notNullable();
+        table.string('password', 255)
+            .nullable();
+        table.string('googleId', 255)
+            .nullable();
     });
 
     await knex.schema.createTable('tasks', function(table) {
@@ -26,9 +26,9 @@ export const up = async (knex: Knex) => {
         table.string('user_id')
             .references('users.id');
     });
-}
+};
 
 export const down = async (knex: Knex): Promise<any> => {
     await knex.schema.dropTable('tasks');
     await knex.schema.dropTable('users');
-}
+};

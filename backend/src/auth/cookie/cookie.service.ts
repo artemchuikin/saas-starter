@@ -1,13 +1,14 @@
-import { Injectable } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
-import { Response } from "express";
+import {Injectable} from '@nestjs/common';
+import {ConfigService} from '@nestjs/config';
+import {Response} from 'express';
 
 @Injectable()
 export class CookieService {
 
     constructor(
         private readonly configService: ConfigService
-    ) {}
+    ) {
+    }
 
     setRefreshToken(res: Response, value: string) {
         res.cookie('refreshToken', value, {

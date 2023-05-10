@@ -1,4 +1,4 @@
-import { Knex } from "knex";
+import {Knex} from 'knex';
 
 declare module 'knex/types/tables' {
     interface Tables {
@@ -16,7 +16,7 @@ export interface Task {
 }
 
 export enum TaskStatus {
-    OPEN = "OPEN",
-    IN_PROGRESS = "IN_PROGRESS",
-    DONE = "DONE"
+    OPEN = 'OPEN',
+    IN_PROGRESS = 'IN_PROGRESS',
+    DONE = 'DONE'
 }

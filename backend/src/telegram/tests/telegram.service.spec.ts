@@ -1,5 +1,5 @@
-import { Test } from "@nestjs/testing";
-import { TelegramService } from "../telegram.service";
+import {Test} from '@nestjs/testing';
+import {TelegramService} from '../telegram.service';
 
 describe('TelegramService', () => {
     let telegramService: TelegramService;
@@ -9,7 +9,7 @@ describe('TelegramService', () => {
     beforeEach(async () => {
         const module = await Test.createTestingModule({
             providers: [
-                { provide: TelegramService, useValue: mockTelegramService }
+                {provide: TelegramService, useValue: mockTelegramService}
             ]
         }).compile();
 

@@ -1,16 +1,17 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
 import {
     TelegramOptions,
     TelegramBot
-} from "./telegram.types";
-import { InjectConnection, InjectOptions } from "./common/telegram.decorator";
+} from './telegram.types';
+import {InjectConnection, InjectOptions} from './common/telegram.decorator';
 
 @Injectable()
 export class TelegramService {
     constructor(
         @InjectOptions() private telegramOptions: TelegramOptions,
         @InjectConnection() private telegramBot: TelegramBot
-    ) {}
+    ) {
+    }
 
     async sendMessage(
         message: string,
@@ -18,7 +19,7 @@ export class TelegramService {
     ): Promise<void> {
         try {
             await this.telegramBot.telegram.sendMessage(chatId, message);
-        } catch(err) {
+        } catch (err) {
             throw new HttpException('Token not found', HttpStatus.UNAUTHORIZED);
         }
     }

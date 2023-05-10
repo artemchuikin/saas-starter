@@ -1,15 +1,15 @@
-import { Test } from "@nestjs/testing";
-import { TasksService } from "../tasks.service";
+import {Test} from '@nestjs/testing';
+import {TasksService} from '../tasks.service';
 
 const mockTasksService = () => ({
     getTasks: jest.fn()
-})
+});
 
 const mockUser = {
     id: '1',
     email: 'ssd@gmail.com',
     password: 'somePassword'
-}
+};
 
 describe('TasksService', () => {
     let tasksService: TasksService;
@@ -17,7 +17,7 @@ describe('TasksService', () => {
     beforeEach(async () => {
         const module = await Test.createTestingModule({
             providers: [
-                { provide: TasksService, useFactory: mockTasksService }
+                {provide: TasksService, useFactory: mockTasksService}
             ]
         }).compile();
 

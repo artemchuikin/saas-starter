@@ -1,4 +1,4 @@
-import { ConfigService } from "@nestjs/config";
+import {ConfigService} from '@nestjs/config';
 
 export const getJWTConfig = (configService: ConfigService) => {
     const secret = configService.get<string>('jwt.secret');
@@ -11,5 +11,5 @@ export const getJWTConfig = (configService: ConfigService) => {
             audience,
             issuer
         }
-    }
-}
+    };
+};

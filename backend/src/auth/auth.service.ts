@@ -1,20 +1,20 @@
-import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
-import { JwtService } from "@nestjs/jwt";
-import { Knex } from "knex";
-import { UsersService } from "../users/users.service";
-import { HashingService } from "./hashing/hashing.service";
-import { UserCredentialsDto } from "../users/dto/user-credentials.dto";
-import { JwtPayload, JwtTokens } from "./auth.types";
-import { InjectConnection } from "nest-knexjs";
-import { User } from "../users/users.types";
-import { ConfigService } from "@nestjs/config";
-import { RefreshTokenDto } from "./dto/refresh-token.dto";
-import { InvalidatedTokenError, RefreshTokenIdsStorage } from "./refresh-token-ids.storage";
-import { randomUUID } from "crypto";
-import { ForgotPasswordDto } from "./dto/forgot-password.dto";
-import { EmailService } from "../email/email.service";
-import { ResetPasswordDto } from "./dto/reset-password.dto";
-import { ResetPassTokenIdsStorage } from "./reset-pass-token-ids.storage";
+import {BadRequestException, Injectable, NotFoundException, UnauthorizedException} from '@nestjs/common';
+import {JwtService} from '@nestjs/jwt';
+import {Knex} from 'knex';
+import {UsersService} from '../users/users.service';
+import {HashingService} from './hashing/hashing.service';
+import {UserCredentialsDto} from '../users/dto/user-credentials.dto';
+import {JwtPayload, JwtTokens} from './auth.types';
+import {InjectConnection} from 'nest-knexjs';
+import {User} from '../users/users.types';
+import {ConfigService} from '@nestjs/config';
+import {RefreshTokenDto} from './dto/refresh-token.dto';
+import {InvalidatedTokenError, RefreshTokenIdsStorage} from './refresh-token-ids.storage';
+import {randomUUID} from 'crypto';
+import {ForgotPasswordDto} from './dto/forgot-password.dto';
+import {EmailService} from '../email/email.service';
+import {ResetPasswordDto} from './dto/reset-password.dto';
+import {ResetPassTokenIdsStorage} from './reset-pass-token-ids.storage';
 
 @Injectable()
 export class AuthService {
@@ -27,7 +27,8 @@ export class AuthService {
         private readonly resetPassTokenIdsStorage: ResetPassTokenIdsStorage,
         private readonly configService: ConfigService,
         private readonly emailService: EmailService
-    ) { }
+    ) {
+    }
 
     async signUp(userCredentialsDto: UserCredentialsDto): Promise<JwtTokens> {
         const user = await this.usersService.createUser(userCredentialsDto);
@@ -37,10 +38,10 @@ export class AuthService {
 
     async signIn(userCredentialsDto: UserCredentialsDto
     ): Promise<JwtTokens> {
-        const { email, password } = userCredentialsDto;
+        const {email, password} = userCredentialsDto;
         const user = await this.knex('users').where('email', email);
 
-        if(!user[0]) {
+        if (!user[0]) {
             throw new UnauthorizedException('These credentials do not match our records.');
         }
 
@@ -72,31 +73,34 @@ export class AuthService {
             await this.signToken<Partial<JwtPayload>>(
                 user.id,
                 this.configService.get('jwt.accessTokenTtl'),
-                { email: user.email }
+                {email: user.email}
             ),
             await this.signToken(user.id, this.configService.get('jwt.refreshTokenTtl'), {refreshTokenId})
         ]);
 
         await this.refreshTokenIdsStorage.insert(user.id, refreshTokenId);
 
-        return { accessToken, refreshToken };
+        return {accessToken, refreshToken};
     }
 
     async refreshTokens(refreshTokenDto: RefreshTokenDto): Promise<JwtTokens> {
         try {
-            const {sub, refreshTokenId} = await this.jwtService.verifyAsync<Pick<JwtPayload, 'sub'> & {refreshTokenId: string}>(refreshTokenDto.refreshToken);
+            const {
+                sub,
+                refreshTokenId
+            } = await this.jwtService.verifyAsync<Pick<JwtPayload, 'sub'> & {refreshTokenId: string}>(refreshTokenDto.refreshToken);
             const user = await this.knex('users').where('id', sub);
             const isValid = await this.refreshTokenIdsStorage.validate(user[0].id, refreshTokenId);
 
-            if(isValid) {
+            if (isValid) {
                 await this.refreshTokenIdsStorage.invalidate(user[0].id);
             } else {
                 throw new Error('Refresh token is invalid');
             }
 
             return this.generateTokens(user[0]);
-        } catch(err) {
-            if(err instanceof InvalidatedTokenError) {
+        } catch (err) {
+            if (err instanceof InvalidatedTokenError) {
                 //Take action: notify user that his refresh token might have been stolen?
                 throw new UnauthorizedException('Access denied');
             }
@@ -116,7 +120,7 @@ export class AuthService {
         const token = await this.signToken(
             user[0].id,
             this.configService.get('jwt.resetTokenTtl'),
-            { email: user[0].email, resetTokenId }
+            {email: user[0].email, resetTokenId}
         );
         const link = `${this.configService.get('clientUrl')}/reset-password/${token}`;
 
@@ -129,19 +133,22 @@ export class AuthService {
     }
 
     async resetPassword(resetToken, resetPasswordDto: ResetPasswordDto): Promise<JwtTokens> {
-        const { password, confirmPassword } = resetPasswordDto;
+        const {password, confirmPassword} = resetPasswordDto;
 
         try {
-            const {email, resetTokenId} = await this.jwtService.verifyAsync<Pick<JwtPayload, 'email'> & {resetTokenId: string}>(resetToken);
+            const {
+                email,
+                resetTokenId
+            } = await this.jwtService.verifyAsync<Pick<JwtPayload, 'email'> & {resetTokenId: string}>(resetToken);
             const user = await this.knex('users').where('email', email);
             const isValid = await this.resetPassTokenIdsStorage.validate(user[0].id, resetTokenId);
             const hashedPassword = await this.hashingService.hash(password);
 
-            if(isValid) {
-                if(password === confirmPassword) {
+            if (isValid) {
+                if (password === confirmPassword) {
                     await this.knex('users')
                         .where('email', email)
-                        .update({ password: hashedPassword })
+                        .update({password: hashedPassword})
                         .returning(['id', 'email']);
 
                     await this.resetPassTokenIdsStorage.invalidate(user[0].id);
@@ -152,13 +159,13 @@ export class AuthService {
 
                     return await this.signIn({email, password});
                 } else {
-                    throw new Error("Passwords don't match");
+                    throw new Error('Passwords don\'t match');
                 }
             } else {
-                throw new BadRequestException('Token is invalid or has expired. Please request a new password reset token.')
+                throw new BadRequestException('Token is invalid or has expired. Please request a new password reset token.');
             }
-        } catch(err) {
-            throw new BadRequestException('Token is invalid or has expired. Please request a new password reset token.')
+        } catch (err) {
+            throw new BadRequestException('Token is invalid or has expired. Please request a new password reset token.');
         }
     }
 }

@@ -1,5 +1,5 @@
-import { TwilioOptions } from "./twilio.types";
-import { ConfigService } from "@nestjs/config";
+import {TwilioOptions} from './twilio.types';
+import {ConfigService} from '@nestjs/config';
 
 export const getTwilioConfig = (configService: ConfigService): TwilioOptions => {
     const accountSid = configService.get('accountSid');
@@ -8,5 +8,5 @@ export const getTwilioConfig = (configService: ConfigService): TwilioOptions => 
     return {
         accountSid,
         authToken
-    }
-}
+    };
+};

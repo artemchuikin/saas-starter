@@ -1,14 +1,14 @@
-import { DynamicModule, Module, Provider, Type } from "@nestjs/common";
+import {DynamicModule, Module, Provider, Type} from '@nestjs/common';
 import {
     TelegramOptions,
     TelegramOptionsFactory,
     TelegramModuleAsyncOptions
-} from "./telegram.types";
+} from './telegram.types';
 import {
     TELEGRAM_MODULE_OPTIONS,
     TELEGRAM_MODULE_CONNECTION
-} from "./telegram.constants";
-import { createTelegramBot } from "./common/telegram.utils";
+} from './telegram.constants';
+import {createTelegramBot} from './common/telegram.utils';
 
 @Module({})
 export class TelegramCoreModule {
@@ -29,13 +29,13 @@ export class TelegramCoreModule {
             module: TelegramCoreModule,
             providers: [
                 optionsProvider,
-                connectionProvider,
+                connectionProvider
             ],
             exports: [
                 optionsProvider,
                 connectionProvider
             ]
-        }
+        };
     }
 
     public static forRootAsync(
@@ -69,13 +69,13 @@ export class TelegramCoreModule {
     private static createAsyncProvider(
         options: TelegramModuleAsyncOptions
     ): Provider[] {
-        if(!(options.useFactory || options.useClass || options.useExisting)) {
+        if (!(options.useFactory || options.useClass || options.useExisting)) {
             throw new Error(
                 'Invalid configuration. Must provide useFactory, useClass or useExisting'
             );
         }
 
-        if(options.useExisting || options.useFactory) {
+        if (options.useExisting || options.useFactory) {
             return [this.createAsyncOptionsProvider(options)];
         }
 
@@ -83,20 +83,20 @@ export class TelegramCoreModule {
 
         return [
             this.createAsyncOptionsProvider(options),
-            { provide: useClass, useClass }
-        ]
+            {provide: useClass, useClass}
+        ];
     }
 
     private static createAsyncOptionsProvider(
         options: TelegramModuleAsyncOptions
     ): Provider {
-        if(!(options.useFactory || options.useClass || options.useExisting)) {
+        if (!(options.useFactory || options.useClass || options.useExisting)) {
             throw new Error(
                 'Invalid configuration. Must provide useFactory, useClass or useExisting'
             );
         }
 
-        if(options.useFactory) {
+        if (options.useFactory) {
             return {
                 provide: TELEGRAM_MODULE_OPTIONS,
                 useFactory: async (...args: any[]) => {
@@ -113,7 +113,7 @@ export class TelegramCoreModule {
             ): Promise<TelegramOptions> => {
                 return await optionsFactory.createTelegramOptions();
             },
-            inject: [(options.useClass || options.useExisting) as Type<TelegramOptionsFactory>],
+            inject: [(options.useClass || options.useExisting) as Type<TelegramOptionsFactory>]
         };
     }
 }

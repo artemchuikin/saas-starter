@@ -1,14 +1,16 @@
-import Redis from "ioredis";
-import { Injectable, OnApplicationBootstrap, OnApplicationShutdown } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
+import Redis from 'ioredis';
+import {Injectable, OnApplicationBootstrap, OnApplicationShutdown} from '@nestjs/common';
+import {ConfigService} from '@nestjs/config';
 
-export class InvalidatedTokenError extends Error {}
+export class InvalidatedTokenError extends Error {
+}
 
 @Injectable()
 export class ResetPassTokenIdsStorage implements OnApplicationBootstrap, OnApplicationShutdown {
     constructor(
         private readonly configService: ConfigService
-    ) {}
+    ) {
+    }
 
     private redisClient: Redis;
 
@@ -29,7 +31,7 @@ export class ResetPassTokenIdsStorage implements OnApplicationBootstrap, OnAppli
 
     async validate(userId: string, tokenId: string): Promise<boolean> {
         const storedId = await this.redisClient.get(this.getKey(userId));
-        if(storedId !== tokenId) {
+        if (storedId !== tokenId) {
             throw new InvalidatedTokenError();
         }
 

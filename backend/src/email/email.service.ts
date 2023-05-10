@@ -1,11 +1,12 @@
-import { MailerService } from "@nestjs-modules/mailer";
-import { Injectable } from "@nestjs/common";
-import { ForgotPasswordEmailDto } from "./dto/forgot-password-email.dto";
-import { SuccessResetPasswordEmailDto } from "./dto/success-reset-password-email.dto";
+import {MailerService} from '@nestjs-modules/mailer';
+import {Injectable} from '@nestjs/common';
+import {ForgotPasswordEmailDto} from './dto/forgot-password-email.dto';
+import {SuccessResetPasswordEmailDto} from './dto/success-reset-password-email.dto';
 
 @Injectable()
 export class EmailService {
-    constructor(private mailerService: MailerService) {}
+    constructor(private mailerService: MailerService) {
+    }
 
     async forgotPassword(forgotPasswordEmailDto: ForgotPasswordEmailDto) {
         const {email, name, link} = forgotPasswordEmailDto;
@@ -18,7 +19,7 @@ export class EmailService {
                 name,
                 link
             }
-        })
+        });
     }
 
     async successResetPassword(successResetPasswordEmailDto: SuccessResetPasswordEmailDto) {
@@ -31,6 +32,6 @@ export class EmailService {
             context: {
                 name
             }
-        })
+        });
     }
 }

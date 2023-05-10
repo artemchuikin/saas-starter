@@ -4,15 +4,15 @@ import {
     InternalServerErrorException,
     NotFoundException,
     UnauthorizedException
-} from "@nestjs/common";
-import { UserCredentialsDto } from "./dto/user-credentials.dto";
+} from '@nestjs/common';
+import {UserCredentialsDto} from './dto/user-credentials.dto';
 import * as uniqid from 'uniqid';
-import { Knex } from 'knex';
-import { InjectConnection } from 'nest-knexjs';
-import { User } from "./users.types";
-import { HashingService } from "../auth/hashing/hashing.service";
-import { JwtPayload } from "../auth/auth.types";
-import { RefreshTokenIdsStorage } from "../auth/refresh-token-ids.storage";
+import {Knex} from 'knex';
+import {InjectConnection} from 'nest-knexjs';
+import {User} from './users.types';
+import {HashingService} from '../auth/hashing/hashing.service';
+import {JwtPayload} from '../auth/auth.types';
+import {RefreshTokenIdsStorage} from '../auth/refresh-token-ids.storage';
 
 @Injectable()
 export class UsersService {
@@ -20,13 +20,14 @@ export class UsersService {
         @InjectConnection() private readonly knex: Knex,
         private readonly hashingService: HashingService,
         private readonly refreshTokenIdsStorage: RefreshTokenIdsStorage
-    ) {}
+    ) {
+    }
 
     async validateUser(payload: JwtPayload): Promise<User> {
-        const { email } = payload;
+        const {email} = payload;
         const user: Promise<User> = this.getUserByEmail(email);
 
-        if(!user) {
+        if (!user) {
             throw new UnauthorizedException();
         }
 
@@ -34,7 +35,7 @@ export class UsersService {
     }
 
     async createUser(userCredentialsDto: UserCredentialsDto): Promise<User> {
-        const { email, password } = userCredentialsDto;
+        const {email, password} = userCredentialsDto;
         const hashedPassword = await this.hashingService.hash(password);
         const uid = uniqid();
 
@@ -48,8 +49,8 @@ export class UsersService {
                 .returning(['id', 'email']);
 
             return user[0];
-        } catch(error) {
-            if(error.code === '23505') {
+        } catch (error) {
+            if (error.code === '23505') {
                 /**
                  * @throws
                  * Will throw an error if the document (user) does not exist.
@@ -83,7 +84,7 @@ export class UsersService {
         const deletedUser = await this.knex('users')
             .where('id', id)
             .del()
-            .returning(['id', 'email'])
+            .returning(['id', 'email']);
 
         await this.refreshTokenIdsStorage.invalidate(id);
 

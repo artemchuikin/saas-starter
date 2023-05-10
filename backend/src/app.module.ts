@@ -1,15 +1,15 @@
-import { Module } from "@nestjs/common";
-import { ConfigModule, ConfigService } from "@nestjs/config";
-import { KnexModule } from "nest-knexjs";
+import {Module} from '@nestjs/common';
+import {ConfigModule, ConfigService} from '@nestjs/config';
+import {KnexModule} from 'nest-knexjs';
 import configuration from './config/configuration';
-import { getDbConfig } from "./db/db.config";
-import { TasksModule } from './tasks/tasks.module';
-import { AuthModule } from './auth/auth.module';
-import { TwilioModule } from './twilio/twilio.module';
-import { MailerModule } from '@nestjs-modules/mailer';
-import { getEmailConfig } from "./email/email.config";
-import { EmailController } from "./email/email.controller";
-import { EmailService } from "./email/email.service";
+import {getDbConfig} from './db/db.config';
+import {TasksModule} from './tasks/tasks.module';
+import {AuthModule} from './auth/auth.module';
+import {TwilioModule} from './twilio/twilio.module';
+import {MailerModule} from '@nestjs-modules/mailer';
+import {getEmailConfig} from './email/email.config';
+import {EmailController} from './email/email.controller';
+import {EmailService} from './email/email.service';
 
 @Module({
     imports: [
@@ -30,6 +30,7 @@ import { EmailService } from "./email/email.service";
         TwilioModule
     ],
     controllers: [EmailController],
-    providers: [EmailService],
+    providers: [EmailService]
 })
-export class AppModule {}
+export class AppModule {
+}

@@ -1,22 +1,23 @@
-import { Body, Controller, Post, Get, HttpStatus, HttpCode, Res, Req, UseGuards, Patch, Param } from "@nestjs/common";
-import { AuthService } from "./auth.service";
-import { UserCredentialsDto } from "../users/dto/user-credentials.dto";
-import { Request, Response } from "express";
-import { JwtTokens } from "./auth.types";
-import { ConfigService } from "@nestjs/config";
-import { GetUser } from "../users/get-user.decorator";
-import { User } from "../users/users.types";
-import { AuthGuard } from "@nestjs/passport";
-import { ForgotPasswordDto } from "./dto/forgot-password.dto";
-import { ResetPasswordDto } from "./dto/reset-password.dto";
-import { CookieService } from "./cookie/cookie.service";
+import {Body, Controller, Post, Get, HttpStatus, HttpCode, Res, Req, UseGuards, Patch, Param} from '@nestjs/common';
+import {AuthService} from './auth.service';
+import {UserCredentialsDto} from '../users/dto/user-credentials.dto';
+import {Request, Response} from 'express';
+import {JwtTokens} from './auth.types';
+import {ConfigService} from '@nestjs/config';
+import {GetUser} from '../users/get-user.decorator';
+import {User} from '../users/users.types';
+import {AuthGuard} from '@nestjs/passport';
+import {ForgotPasswordDto} from './dto/forgot-password.dto';
+import {ResetPasswordDto} from './dto/reset-password.dto';
+import {CookieService} from './cookie/cookie.service';
 
 @Controller('auth')
 export class AuthController {
     constructor(
         private authService: AuthService,
         private cookieService: CookieService
-    ) {}
+    ) {
+    }
 
     @Post('signup')
     async signUp(
@@ -67,7 +68,7 @@ export class AuthController {
         @Req() req: Request,
         @Res({passthrough: true}) res: Response
     ): Promise<JwtTokens> {
-        const { refreshToken } = req.cookies;
+        const {refreshToken} = req.cookies;
         const generatedTokens = await this.authService.refreshTokens({refreshToken});
 
         this.cookieService.setRefreshToken(
@@ -87,10 +88,10 @@ export class AuthController {
     }
 
     @HttpCode(HttpStatus.OK)
-    @Patch("reset-password/:token")
+    @Patch('reset-password/:token')
     async resetPassword(
         @Res({passthrough: true}) res: Response,
-        @Param("token") resetToken: string,
+        @Param('token') resetToken: string,
         @Body() resetPasswordDto: ResetPasswordDto
     ): Promise<JwtTokens> {
         const generatedTokens = await this.authService.resetPassword(resetToken, resetPasswordDto);

@@ -1,8 +1,8 @@
-import { DynamicModule, Module } from "@nestjs/common";
-import { TwilioService } from "./twilio.service";
-import { TwilioModuleAsyncOptions, TwilioOptions } from "./twilio.types";
-import { TwilioController } from "./twilio.controller";
-import { TwilioCoreModule } from "./twilio-core.module";
+import {DynamicModule, Module} from '@nestjs/common';
+import {TwilioService} from './twilio.service';
+import {TwilioModuleAsyncOptions, TwilioOptions} from './twilio.types';
+import {TwilioController} from './twilio.controller';
+import {TwilioCoreModule} from './twilio-core.module';
 
 @Module({})
 export class TwilioModule {
@@ -13,7 +13,7 @@ export class TwilioModule {
             providers: [TwilioService],
             exports: [TwilioService],
             controllers: [TwilioController]
-        }
+        };
     }
 
     public static forRootAsync(options: TwilioModuleAsyncOptions): DynamicModule {

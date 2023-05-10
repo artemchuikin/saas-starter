@@ -1,4 +1,4 @@
-import { ConfigService } from "@nestjs/config";
+import {ConfigService} from '@nestjs/config';
 
 export const getDbConfig = (configService: ConfigService) => {
     const host = configService.get('database.host');
@@ -12,8 +12,8 @@ export const getDbConfig = (configService: ConfigService) => {
                 host: host,
                 user: username,
                 password: password,
-                database: db_name,
-            },
+                database: db_name
+            }
         }
-    }
-}
+    };
+};

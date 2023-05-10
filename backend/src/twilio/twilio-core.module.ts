@@ -1,14 +1,14 @@
-import { DynamicModule, Module, Provider, Type } from "@nestjs/common";
+import {DynamicModule, Module, Provider, Type} from '@nestjs/common';
 import {
     TwilioOptions,
     TwilioOptionsFactory,
     TwilioModuleAsyncOptions
-} from "./twilio.types";
+} from './twilio.types';
 import {
     TWILIO_MODULE_OPTIONS,
     TWILIO_MODULE_CONNECTION
-} from "./twilio.constants";
-import { createTwilioClient } from "./common/twilio.utils";
+} from './twilio.constants';
+import {createTwilioClient} from './common/twilio.utils';
 
 @Module({})
 export class TwilioCoreModule {
@@ -23,10 +23,10 @@ export class TwilioCoreModule {
         return {
             module: TwilioCoreModule,
             providers: [
-                connectionProvider,
+                connectionProvider
             ],
             exports: [connectionProvider]
-        }
+        };
     }
 
     public static forRootAsync(
@@ -52,13 +52,13 @@ export class TwilioCoreModule {
     private static createAsyncProvider(
         options: TwilioModuleAsyncOptions
     ): Provider[] {
-        if(!(options.useFactory || options.useClass || options.useExisting)) {
+        if (!(options.useFactory || options.useClass || options.useExisting)) {
             throw new Error(
                 'Invalid configuration. Must provide useFactory, useClass or useExisting'
             );
         }
 
-        if(options.useExisting || options.useFactory) {
+        if (options.useExisting || options.useFactory) {
             return [this.createAsyncOptionsProvider(options)];
         }
 
@@ -66,20 +66,20 @@ export class TwilioCoreModule {
 
         return [
             this.createAsyncOptionsProvider(options),
-            { provide: useClass, useClass }
-        ]
+            {provide: useClass, useClass}
+        ];
     }
 
     private static createAsyncOptionsProvider(
         options: TwilioModuleAsyncOptions
     ): Provider {
-        if(!(options.useFactory || options.useClass || options.useExisting)) {
+        if (!(options.useFactory || options.useClass || options.useExisting)) {
             throw new Error(
                 'Invalid configuration. Must provide useFactory, useClass or useExisting'
             );
         }
 
-        if(options.useFactory) {
+        if (options.useFactory) {
             return {
                 provide: TWILIO_MODULE_OPTIONS,
                 useFactory: async (...args: any[]) => {
@@ -96,7 +96,7 @@ export class TwilioCoreModule {
             ): Promise<TwilioOptions> => {
                 return await optionsFactory.createTwilioOptions();
             },
-            inject: [(options.useClass || options.useExisting) as Type<TwilioOptionsFactory>],
+            inject: [(options.useClass || options.useExisting) as Type<TwilioOptionsFactory>]
         };
     }
 }
