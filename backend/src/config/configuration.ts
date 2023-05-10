@@ -1,6 +1,6 @@
 export default () => ({
     apiUrl: process.env.API_URL,
-    clientUrl: process.env.CLIENT_URL,
+    clientUrl: process.env.CLIENT_URL || 'http://localhost:3002',
     domain: process.env.DOMAIN,
     port: process.env.PORT,
     database: {
