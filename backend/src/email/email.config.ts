@@ -3,6 +3,7 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
 import { join } from 'path';
 
 export const getEmailConfig = (configService: ConfigService) => {
+    const nodeEnv = configService.get('nodeEnv');
     const host = configService.get('email.host');
     const username = configService.get('email.username');
     const password = configService.get('email.password');
@@ -20,7 +21,9 @@ export const getEmailConfig = (configService: ConfigService) => {
             from: `Nice App ${configService.get('email.username')}`
         },
         template: {
-            dir: join(__dirname, '..', 'email', 'templates'),
+            dir: nodeEnv === "prod"
+                ? join(__dirname, '..', 'email', 'templates')
+                : join(__dirname, '../src/email/templates'),
             adapter: new HandlebarsAdapter(),
             options: {
                 strict: true

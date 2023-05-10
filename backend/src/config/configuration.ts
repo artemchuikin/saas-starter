@@ -1,4 +1,5 @@
 export default () => ({
+    nodeEnv: process.env.NODE_ENV,
     apiUrl: process.env.API_URL,
     clientUrl: process.env.CLIENT_URL,
     domain: process.env.DOMAIN,

@@ -12,10 +12,7 @@ async function bootstrap() {
     const port = configService.get<string>('port');
     app.setGlobalPrefix('api/v1');
     app.enableCors({
-        origin: [
-            'http://localhost:3002',
-            configService.get<string>('clientUrl')
-        ],
+        origin: configService.get<string>('clientUrl'),
         credentials: true
     });
     app.use(cookieParser());
