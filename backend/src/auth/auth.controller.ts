@@ -103,4 +103,10 @@ export class AuthController {
 
         return generatedTokens;
     }
+
+    @HttpCode(HttpStatus.OK)
+    @Post('hello')
+    sayHello() {
+        return "Hello World"
+    }
 }
