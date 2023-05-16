@@ -109,13 +109,15 @@ export class AuthService {
     }
 
     async insertOldRefreshToken(refreshTokenDto: RefreshTokenDto): Promise<void> {
-        const {
-            sub,
-            refreshTokenId
-        } = await this.jwtService.verifyAsync<Pick<JwtPayload, 'sub'> & {refreshTokenId: string}>(refreshTokenDto.refreshToken);
-        const user = await this.knex('users').where('id', sub);
-
         try {
+            const {
+                sub,
+                refreshTokenId
+            } = await this.jwtService.verifyAsync<Pick<JwtPayload, 'sub'> & {refreshTokenId: string}>(refreshTokenDto.refreshToken);
+            const user = await this.knex('users').where('id', sub);
+
+            console.log('Get User')
+
             await this.refreshTokenIdsStorage.insert(user[0].id, refreshTokenId, this.configService.get('jwt.refreshTokenTtl'));
         } catch(err) {
             throw new UnauthorizedException();

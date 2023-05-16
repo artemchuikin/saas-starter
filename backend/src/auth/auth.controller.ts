@@ -76,19 +76,19 @@ export class AuthController {
             controller.abort();
         });
 
-        await new Promise((resolve) => setTimeout(() => resolve(true), 700));
         const generatedTokens = await this.authService.refreshTokens({refreshToken});
 
         if (signal.aborted) {
+            console.log('Aborted')
             await this.authService.insertOldRefreshToken({refreshToken});
         } else {
             this.cookieService.setRefreshToken(
                 res,
                 generatedTokens.refreshToken
             );
-        }
 
-        return generatedTokens;
+            return generatedTokens;
+        }
     }
 
     @HttpCode(HttpStatus.OK)
