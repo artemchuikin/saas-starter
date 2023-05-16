@@ -15,7 +15,7 @@ export class CookieService {
             secure: true,
             httpOnly: true,
             sameSite: 'strict',
-            maxAge: this.configService.get('jwt.refreshTokenTtl'),
+            maxAge: this.configService.get('jwt.refreshTokenTtl') * 1000,
             path: '/api/v1/auth',
             domain: `.${this.configService.get('domain')}`
         });

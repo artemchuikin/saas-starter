@@ -1,6 +1,6 @@
 import {authStore} from '@/src/entities/auth/model';
 import {observer} from 'mobx-react-lite';
-import {useState, useEffect, useContext} from 'react';
+import {useState, useEffect, useContext, useRef} from 'react';
 import Link from 'next/link';
 import clsx from 'clsx';
 
@@ -14,6 +14,8 @@ import {Container} from '../Container';
 import {ButtonMenu} from '../Button';
 import {Logo} from '../Logo';
 import {Avatar} from '../Avatar';
+import {Dropdown} from '../Dropdown';
+import {useOutsideClick} from '@/src/shared/hooks/useOutsideClick';
 
 interface INavbar {
     items: IMenuItems[];
@@ -21,7 +23,9 @@ interface INavbar {
 
 export const Navbar = observer(({items}: INavbar) => {
     const {isAuth, isLoading, signOut} = useContext(authStore);
+    const dropdwonRef = useRef<HTMLDivElement | null>(null);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const {width} = useWindowSize();
 
     const toggleMenu = () => {
@@ -30,9 +34,17 @@ export const Navbar = observer(({items}: INavbar) => {
 
     const closeMenu = () => setIsMenuOpen(false);
 
+    const toggleDropdown = () => {
+        setIsDropdownOpen((current) => !current);
+    };
+
+    const closeDropdown = () => setIsDropdownOpen(false);
+
     useEffect(() => {
         if (width! >= 1200 && isMenuOpen) closeMenu();
     }, [width, isMenuOpen]);
+
+    useOutsideClick(dropdwonRef, closeDropdown, isDropdownOpen);
 
     return (
         <nav>
@@ -46,7 +58,7 @@ export const Navbar = observer(({items}: INavbar) => {
                 )}
             >
                 <Container>
-                    <div className="flex items-center justify-between">
+                    <div className='flex items-center justify-between'>
                         <div>
                             <Logo />
                             <NavMenu isMenuOpen={isMenuOpen}>
@@ -59,40 +71,49 @@ export const Navbar = observer(({items}: INavbar) => {
                         </div>
                         <div>
                             {isLoading ? null : isAuth ? (
-                                <div className="relative inline-block align-middle ml-2 tablet:hidden">
-                                    <Avatar src="/img/1.jpg" />
-                                    <ButtonCta
-                                        variant="transparent"
-                                        isMenuOpen={isMenuOpen}
-                                        onClick={() => signOut()}
-                                    >
-                                        Sign out
-                                    </ButtonCta>
+                                <div className='relative inline-block align-middle ml-2 tablet:hidden'>
+                                    <div className='cursor-pointer inline-block' onClick={toggleDropdown}>
+                                        <Avatar src='/img/1.jpg' />
+                                    </div>
+                                    <Dropdown
+                                        isOpen={isDropdownOpen}
+                                        items={[
+                                            {
+                                                link: '/',
+                                                title: 'Settings'
+                                            },
+                                            {
+                                                action: signOut,
+                                                title: 'Sign out'
+                                            }
+                                        ]}
+                                        ref={dropdwonRef}
+                                    />
                                 </div>
                             ) : (
                                 <>
-                                    <div className="relative inline-block align-middle ml-2 tablet:hidden">
-                                        <Link href="/sign-in">
+                                    <div className='relative inline-block align-middle ml-2 tablet:hidden'>
+                                        <Link href='/sign-in'>
                                             <ButtonCta
-                                                variant="transparent"
+                                                variant='transparent'
                                                 isMenuOpen={isMenuOpen}
                                             >
                                                 Sign in
                                             </ButtonCta>
                                         </Link>
                                     </div>
-                                    <div className="relative inline-block align-middle ml-2 tablet:hidden">
-                                        <Link href="/sign-up">
+                                    <div className='relative inline-block align-middle ml-2 tablet:hidden'>
+                                        <Link href='/sign-up'>
                                             <ButtonCta>Get started</ButtonCta>
                                         </Link>
                                     </div>
                                 </>
                             )}
-                            <div className="relative inline-block align-middle lg:hidden">
+                            <div className='relative inline-block align-middle lg:hidden'>
                                 <ButtonMenu
                                     onClick={toggleMenu}
                                     isMenuOpen={isMenuOpen}
-                                    ariaLabel="Toggle menu"
+                                    ariaLabel='Toggle menu'
                                 />
                             </div>
                         </div>

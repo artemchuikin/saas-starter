@@ -25,8 +25,8 @@ export class RefreshTokenIdsStorage implements OnApplicationBootstrap, OnApplica
         return this.redisClient.quit();
     }
 
-    async insert(userId: string, tokenId: string): Promise<void> {
-        await this.redisClient.set(this.getKey(userId), tokenId);
+    async insert(userId: string, tokenId: string, seconds: number): Promise<void> {
+        await this.redisClient.set(this.getKey(userId), tokenId, 'EX', seconds);
     }
 
     async validate(userId: string, tokenId: string): Promise<boolean> {

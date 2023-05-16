@@ -44,11 +44,7 @@ class AuthStore {
     };
 
     public get isPersist() {
-        return typeof window !== 'undefined' && localStorage.getItem('persist');
-    }
-
-    public get isUnauthorised() {
-        return !this._isAuth && !this.isPersist;
+        return typeof window !== 'undefined' && !!localStorage.getItem('persist');
     }
 
     public get accessToken() {
@@ -122,6 +118,7 @@ class AuthStore {
             this.setAuth(true);
         } catch (err) {
             const error = err as FailedResponse;
+            throwErrorToast(error.response?.data.message!);
             this.setFailureError(error.response?.data.message!);
             this.setAuth(false);
         }

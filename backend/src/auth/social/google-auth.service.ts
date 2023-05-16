@@ -26,7 +26,7 @@ export class GoogleAuthService {
     async authenticate(token: string) {
         try {
             const {email, sub: googleId} = await this.oAuth2Client.getTokenInfo(token);
-            const user = await this.knex('users').where('googleId', googleId);
+            const user = await this.knex('users').where('email', email);
 
             if (user[0]) {
                 return this.authService.generateTokens(user[0]);

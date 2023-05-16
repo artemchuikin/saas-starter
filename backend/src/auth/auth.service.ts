@@ -78,7 +78,7 @@ export class AuthService {
             await this.signToken(user.id, this.configService.get('jwt.refreshTokenTtl'), {refreshTokenId})
         ]);
 
-        await this.refreshTokenIdsStorage.insert(user.id, refreshTokenId);
+        await this.refreshTokenIdsStorage.insert(user.id, refreshTokenId, this.configService.get('jwt.refreshTokenTtl'));
 
         return {accessToken, refreshToken};
     }
@@ -98,12 +98,26 @@ export class AuthService {
                 throw new Error('Refresh token is invalid');
             }
 
-            return this.generateTokens(user[0]);
+            return await this.generateTokens(user[0]);
         } catch (err) {
             if (err instanceof InvalidatedTokenError) {
                 //Take action: notify user that his refresh token might have been stolen?
                 throw new UnauthorizedException('Access denied');
             }
+            throw new UnauthorizedException();
+        }
+    }
+
+    async insertOldRefreshToken(refreshTokenDto: RefreshTokenDto): Promise<void> {
+        const {
+            sub,
+            refreshTokenId
+        } = await this.jwtService.verifyAsync<Pick<JwtPayload, 'sub'> & {refreshTokenId: string}>(refreshTokenDto.refreshToken);
+        const user = await this.knex('users').where('id', sub);
+
+        try {
+            await this.refreshTokenIdsStorage.insert(user[0].id, refreshTokenId, this.configService.get('jwt.refreshTokenTtl'));
+        } catch(err) {
             throw new UnauthorizedException();
         }
     }

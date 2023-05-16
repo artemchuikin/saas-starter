@@ -6,11 +6,11 @@ import {useContext, useEffect} from 'react';
 
 export const DashboardPage = observer(() => {
     const router = useRouter();
-    const {isUnauthorised} = useContext(authStore);
+    const {isAuth, isLoading} = useContext(authStore);
 
     useEffect(() => {
-        if (isUnauthorised) router.push('/');
-    }, [isUnauthorised]);
+        if (!isLoading && !isAuth) router.push('/');
+    }, [isLoading, isAuth])
 
     return (
         <Container>

@@ -3,13 +3,13 @@ import {AuthService} from './auth.service';
 import {UserCredentialsDto} from '../users/dto/user-credentials.dto';
 import {Request, Response} from 'express';
 import {JwtTokens} from './auth.types';
-import {ConfigService} from '@nestjs/config';
 import {GetUser} from '../users/get-user.decorator';
 import {User} from '../users/users.types';
 import {AuthGuard} from '@nestjs/passport';
 import {ForgotPasswordDto} from './dto/forgot-password.dto';
 import {ResetPasswordDto} from './dto/reset-password.dto';
 import {CookieService} from './cookie/cookie.service';
+import AbortController from "abort-controller";
 
 @Controller('auth')
 export class AuthController {
@@ -69,12 +69,23 @@ export class AuthController {
         @Res({passthrough: true}) res: Response
     ): Promise<JwtTokens> {
         const {refreshToken} = req.cookies;
+        const controller = new AbortController();
+        const signal = controller.signal;
+
+        req.socket.on('close', () => {
+            controller.abort();
+        });
+
         const generatedTokens = await this.authService.refreshTokens({refreshToken});
 
-        this.cookieService.setRefreshToken(
-            res,
-            generatedTokens.refreshToken
-        );
+        if (signal.aborted) {
+            await this.authService.insertOldRefreshToken({refreshToken});
+        } else {
+            this.cookieService.setRefreshToken(
+                res,
+                generatedTokens.refreshToken
+            );
+        }
 
         return generatedTokens;
     }
@@ -102,11 +113,5 @@ export class AuthController {
         );
 
         return generatedTokens;
-    }
-
-    @HttpCode(HttpStatus.OK)
-    @Post('hello')
-    sayHello() {
-        return "Hello World"
     }
 }
