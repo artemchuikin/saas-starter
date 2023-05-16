@@ -67,7 +67,7 @@ export class AuthController {
     async refreshTokens(
         @Req() req: Request,
         @Res({passthrough: true}) res: Response
-    ): Promise<JwtTokens> {
+    ): Promise<void> {
         const {refreshToken} = req.cookies;
         const controller = new AbortController();
         const signal = controller.signal;
@@ -76,18 +76,19 @@ export class AuthController {
             controller.abort();
         });
 
-        const generatedTokens = await this.authService.refreshTokens({refreshToken});
+        // const generatedTokens = await this.authService.refreshTokens({refreshToken});
 
         if (signal.aborted) {
             console.log('Aborted')
-            await this.authService.insertOldRefreshToken({refreshToken});
+            // await this.authService.insertOldRefreshToken({refreshToken});
         } else {
-            this.cookieService.setRefreshToken(
-                res,
-                generatedTokens.refreshToken
-            );
-
-            return generatedTokens;
+            console.log('OK')
+            // this.cookieService.setRefreshToken(
+            //     res,
+            //     generatedTokens.refreshToken
+            // );
+            //
+            // return generatedTokens;
         }
     }
 
