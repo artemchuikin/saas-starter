@@ -76,7 +76,7 @@ export class AuthController {
             controller.abort();
         });
 
-        await new Promise((resolve) => setTimeout(() => resolve(true), 300));
+        await new Promise((resolve) => setTimeout(() => resolve(true), 700));
         const generatedTokens = await this.authService.refreshTokens({refreshToken});
 
         if (signal.aborted) {
