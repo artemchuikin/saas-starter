@@ -7,8 +7,7 @@ export class CookieService {
 
     constructor(
         private readonly configService: ConfigService
-    ) {
-    }
+    ) {}
 
     setRefreshToken(res: Response, value: string) {
         res.cookie('refreshToken', value, {

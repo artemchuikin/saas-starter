@@ -11,7 +11,7 @@ import {FormGroup} from '@/src/shared/ui/FormGroup';
 import {FormInput} from '@/src/shared/ui/FormInput';
 import {FormLayout} from '@/src/shared/ui/FormLayout';
 import {ForgotPasswordFormSchema} from '@/src/entities/auth/forms/ForgotPasswordForm/schema';
-import {AuthFormMessage} from '@/src/entities/auth/ui/AuthFormMessage';
+import {AuthFormMessage} from '@/src/entities/auth';
 
 import CheckSvg from '@/public/icons/check.svg';
 
